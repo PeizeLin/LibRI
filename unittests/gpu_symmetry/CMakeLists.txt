@@ -33,3 +33,10 @@ add_test(NAME lri_symmetry COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG}
   ${MPIEXEC_PREFLAGS} $<TARGET_FILE:test_lri_gpu_symmetry> ${MPIEXEC_POSTFLAGS})
 set_tests_properties(lri_symmetry PROPERTIES ENVIRONMENT
   "OMP_NUM_THREADS=1;OPENBLAS_NUM_THREADS=1;MKL_NUM_THREADS=1")
+
+# Exercise the GPU callback contract on a CPU host; no GPU backend is instantiated.
+add_executable(test_gpu_symmetry_filters test_gpu_symmetry_filters.cpp)
+target_compile_features(test_gpu_symmetry_filters PRIVATE cxx_std_14)
+target_compile_definitions(test_gpu_symmetry_filters PRIVATE __GPU_RI)
+target_include_directories(test_gpu_symmetry_filters PRIVATE "${LIBRI_ROOT}/include")
+add_test(NAME gpu_symmetry_filters COMMAND test_gpu_symmetry_filters)
